@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { login } from "../services/auth/service";
 import '../App.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await login({ email, password });
     localStorage.setItem("token", res.data.token);
-    alert("Login OK");
+    navigate("/feed");
   };
 
   return (
