@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getPosts } from "../services/post/service";
 import Navbar from "../components/navbar";
+import { Link } from "react-router-dom";
 
 interface Post {
   id: number;
@@ -17,10 +18,26 @@ export default function Feed() {
     getPosts().then((res) => setPosts(res.data));
   }, []);
 
+  if (!posts || posts.length === 0)
+    return (
+      <>
+        <Navbar />
+        <div className="text-center mt-10 space-y-4">
+          <div>No hay posts disponibles</div>
+          <Link to="/create-post" className="w-full bg-indigo-600 text-white py-2 rounded-lg inline-block text-center">
+            Crear publicación
+          </Link>
+        </div>
+      </>
+  );
+
   return (
     <>
         <Navbar />
         <div className="max-w-64 h-1/3 mx-auto mt-10 space-y-3">
+        <Link to="/create-post" className="w-full bg-indigo-600 text-white py-2 rounded-lg inline-block text-center">
+          Crear publicación
+        </Link>
         {posts.map((post) => (
             <div
             key={post.id}

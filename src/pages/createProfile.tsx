@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api/client";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProfile() {
   const [alias, setAlias] = useState("");
@@ -8,6 +9,7 @@ export default function CreateProfile() {
   const [lastName, setLastName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [bio, setBio] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ export default function CreateProfile() {
     });
     
     alert("Perfil creado")
-    window.location.href = "/feed";
+    navigate("/feed"); 
   };
 
   return (

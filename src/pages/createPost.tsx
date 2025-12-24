@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createPost, type Post } from "../services/post/service";
 import Navbar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
 
 interface CreatePostProps {
   onPostCreated?: (post: Post) => void; // callback para actualizar lista de posts
@@ -9,6 +10,7 @@ interface CreatePostProps {
 export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +20,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     try {
       const res = await createPost(message);
       setMessage("");
-      if (onPostCreated) onPostCreated(res.data); // actualizar posts en Feed/Profile
+      if (onPostCreated) onPostCreated(res.data); 
+      navigate("/feed"); 
     } catch (err) {
       console.error("Error al crear post", err);
     } finally {

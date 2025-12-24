@@ -4,15 +4,24 @@ import '../App.css'
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await login({ email, password });
-    localStorage.setItem("token", res.data.token);
-    navigate("/feed");
+
+    try {
+      await login({ email, password }); // tu función de login que llama backend
+      navigate("/feed"); // redirigir al feed si login OK
+    } catch (err: any) {
+      // Mostrar alerta en UI
+      if (err.response?.status === 401) {
+        alert("Credenciales incorrectas");
+      } else {
+        alert("El Usuario no existe");
+      }
+    }
   };
 
   return (

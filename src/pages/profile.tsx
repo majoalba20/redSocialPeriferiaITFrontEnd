@@ -3,6 +3,7 @@ import Navbar from "../components/navbar";
 
 export default function ProfilePage() {
   const { profile } = useAuth();
+  console.log(profile)
 
   if (!profile) return <div>Perfil no encontrado</div>;
 
@@ -26,11 +27,8 @@ export default function ProfilePage() {
         {/* Sección de publicaciones */}
         <section className="space-y-4">
             <p>Publicaciones</p>
-            <p>{profile.Posts.length}</p>
+            <p>{profile.Posts}</p>
         </section>
-
-        
-
       </main>
     </>
   );

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { getProfile } from "../services/profile/service";
 import type { Profile } from "../services/profile/types";
 
@@ -6,12 +6,14 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   profileNotFound: boolean;
+  logout: () => void; // 🔹 función logout
 }
 
 const AuthContext = createContext<AuthContextType>({
   profile: null,
   loading: true,
   profileNotFound: false,
+  logout: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -20,22 +22,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [profileNotFound, setProfileNotFound] = useState(false);
 
   useEffect(() => {
-  getProfile()
-    .then((res) => {
-      console.log("PROFILE RESPONSE:", res.data); 
-      setProfile(res.data);                       
-    })
-    .catch((err) => {
-      console.log("ERROR /ME", err);
-      setProfile(null);
-      if (err.response?.status === 404) setProfileNotFound(true);
-    })
-    .finally(() => setLoading(false));
-    }, []);
+    getProfile()
+      .then((res) => setProfile(res.data))
+      .catch((err) => {
+        if (err.response?.status === 404) setProfileNotFound(true);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
+  const logout = () => {
+    setProfile(null);
+    sessionStorage.removeItem("token");
+  };
 
   return (
-    <AuthContext.Provider value={{ profile, loading, profileNotFound }}>
+    <AuthContext.Provider value={{ profile, loading, profileNotFound, logout }}>
       {children}
     </AuthContext.Provider>
   );
